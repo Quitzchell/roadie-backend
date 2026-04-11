@@ -21,13 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class VenueServiceTest {
-  @Mock private VenueRepository venueRepository;
-
-  @Mock private LocationRepository locationRepository;
-
-  @Mock private VenueMapper venueMapper;
-
   @InjectMocks private VenueService venueService;
+  @Mock private VenueRepository venueRepository;
+  @Mock private LocationRepository locationRepository;
+  @Mock private VenueMapper venueMapper;
 
   @Test
   void getAllVenues_returnsListOfResponse() {
