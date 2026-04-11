@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.quitzchell.roadie.exception.ResourceNotFoundException;
 import com.quitzchell.roadie.location.Location;
 import com.quitzchell.roadie.location.LocationRepository;
+import com.quitzchell.roadie.location.dto.LocationResponse;
 import com.quitzchell.roadie.venue.dto.VenueRequest;
 import com.quitzchell.roadie.venue.dto.VenueResponse;
 import com.quitzchell.roadie.venue.mapper.VenueMapper;
@@ -73,10 +74,12 @@ public class VenueServiceTest {
   void createVenue_saveAndReturnsResponse() {
     // arrange
     Location location = new Location();
+    LocationResponse locationResponse =
+        new LocationResponse(1, "Rotterdam", "Zuid-Holland", "Netherlands");
     VenueRequest request = new VenueRequest("Rotown", 1);
     Venue venue = new Venue();
     Venue saved = new Venue();
-    VenueResponse response = new VenueResponse(1, "Rotown", null);
+    VenueResponse response = new VenueResponse(1, "Rotown", locationResponse);
 
     when(locationRepository.findById(1)).thenReturn(Optional.of(location));
     when(venueMapper.toEntity(request, location)).thenReturn(venue);
@@ -94,14 +97,16 @@ public class VenueServiceTest {
   @Test
   void updateVenue_saveAndReturnsResponse() {
     // arrange
-    Venue existing = new Venue();
     Location location = new Location();
+    LocationResponse locationResponse =
+        new LocationResponse(1, "Rotterdam", "Zuid-Holland", "Netherlands");
+    Venue existing = new Venue();
     VenueRequest request = new VenueRequest("Rotown", 1);
     Venue saved = new Venue();
-    VenueResponse response = new VenueResponse(1, "Rotown", null);
+    VenueResponse response = new VenueResponse(1, "Rotown", locationResponse);
 
-    when(venueRepository.findById(1)).thenReturn(Optional.of(existing));
     when(locationRepository.findById(1)).thenReturn(Optional.of(location));
+    when(venueRepository.findById(1)).thenReturn(Optional.of(existing));
     when(venueRepository.save(existing)).thenReturn(saved);
     when(venueMapper.toResponse(saved)).thenReturn(response);
 
