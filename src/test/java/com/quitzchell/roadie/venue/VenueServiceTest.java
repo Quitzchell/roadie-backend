@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import com.quitzchell.roadie.exception.ResourceNotFoundException;
 import com.quitzchell.roadie.location.Location;
 import com.quitzchell.roadie.location.LocationRepository;
-import com.quitzchell.roadie.location.dto.LocationResponse;
 import com.quitzchell.roadie.venue.dto.VenueRequest;
 import com.quitzchell.roadie.venue.dto.VenueResponse;
 import com.quitzchell.roadie.venue.mapper.VenueMapper;
@@ -24,8 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class VenueServiceTest {
   @InjectMocks private VenueService venueService;
   @Mock private VenueRepository venueRepository;
-  @Mock private LocationRepository locationRepository;
   @Mock private VenueMapper venueMapper;
+  @Mock private LocationRepository locationRepository;
 
   @Test
   void getAllVenues_returnsListOfResponse() {
@@ -74,12 +73,11 @@ public class VenueServiceTest {
   void createVenue_saveAndReturnsResponse() {
     // arrange
     Location location = new Location();
-    LocationResponse locationResponse =
-        new LocationResponse(1, "Rotterdam", "Zuid-Holland", "Netherlands");
+
     VenueRequest request = new VenueRequest("Rotown", 1);
     Venue venue = new Venue();
     Venue saved = new Venue();
-    VenueResponse response = new VenueResponse(1, "Rotown", locationResponse);
+    VenueResponse response = new VenueResponse(1, "Rotown", null);
 
     when(locationRepository.findById(1)).thenReturn(Optional.of(location));
     when(venueMapper.toEntity(request, location)).thenReturn(venue);
@@ -98,12 +96,11 @@ public class VenueServiceTest {
   void updateVenue_saveAndReturnsResponse() {
     // arrange
     Location location = new Location();
-    LocationResponse locationResponse =
-        new LocationResponse(1, "Rotterdam", "Zuid-Holland", "Netherlands");
+
     Venue existing = new Venue();
     VenueRequest request = new VenueRequest("Rotown", 1);
     Venue saved = new Venue();
-    VenueResponse response = new VenueResponse(1, "Rotown", locationResponse);
+    VenueResponse response = new VenueResponse(1, "Rotown", null);
 
     when(locationRepository.findById(1)).thenReturn(Optional.of(location));
     when(venueRepository.findById(1)).thenReturn(Optional.of(existing));
