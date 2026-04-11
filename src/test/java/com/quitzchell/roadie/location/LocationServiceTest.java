@@ -82,7 +82,7 @@ public class LocationServiceTest {
     LocationResponse result = locationService.createLocation(request);
 
     // assert
-    assertThat(result.id()).isEqualTo(1);
+    assertThat(result).isEqualTo(response);
     verify(locationRepository).save(location);
   }
 
