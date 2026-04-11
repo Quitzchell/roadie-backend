@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class LocationServiceTest {
-  @InjectMocks LocationService locationService;
+  @InjectMocks private LocationService locationService;
   @Mock private LocationRepository locationRepository;
   @Mock private LocationMapper locationMapper;
 

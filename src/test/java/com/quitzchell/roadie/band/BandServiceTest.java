@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class BandServiceTest {
-  @InjectMocks BandService bandService;
+  @InjectMocks private BandService bandService;
   @Mock private BandRepository bandRepository;
   @Mock private BandMapper bandMapper;
 
