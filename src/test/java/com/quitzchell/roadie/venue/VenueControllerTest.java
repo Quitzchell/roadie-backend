@@ -34,8 +34,10 @@ public class VenueControllerTest {
 
   @Test
   void getAllVenues_returns200() throws Exception {
+    // arrange
     when(venueService.getAllVenues()).thenReturn(List.of(venueResponse));
 
+    // act + assert
     mockMvc
         .perform(get("/api/v1/venues"))
         .andExpect(status().isOk())
@@ -45,8 +47,10 @@ public class VenueControllerTest {
 
   @Test
   void getVenueById_returns200() throws Exception {
+    // arrange
     when(venueService.getVenueById(1)).thenReturn(venueResponse);
 
+    // act + assert
     mockMvc
         .perform(get("/api/v1/venues/1"))
         .andExpect(status().isOk())
@@ -55,8 +59,10 @@ public class VenueControllerTest {
 
   @Test
   void getVenueById_whenNotFound_returns404() throws Exception {
+    // arrange
     when(venueService.getVenueById(99)).thenThrow(new ResourceNotFoundException("Venue not found"));
 
+    // act + assert
     mockMvc
         .perform(get("/api/v1/venues/99"))
         .andExpect(status().isNotFound())
@@ -65,9 +71,11 @@ public class VenueControllerTest {
 
   @Test
   void createVenue_returns201() throws Exception {
+    // arrange
     VenueRequest request = new VenueRequest("Rotown", 1);
     when(venueService.createVenue(any(VenueRequest.class))).thenReturn(venueResponse);
 
+    // act + assert
     mockMvc
         .perform(
             post("/api/v1/venues")
@@ -80,8 +88,10 @@ public class VenueControllerTest {
 
   @Test
   void createVenue_withBlankName_returns400() throws Exception {
+    // assert
     VenueRequest request = new VenueRequest("", 1);
 
+    // act + assert
     mockMvc
         .perform(
             post("/api/v1/venues")
@@ -92,8 +102,10 @@ public class VenueControllerTest {
 
   @Test
   void createVenue_withNullLocationId_returns400() throws Exception {
+    // arrange
     String json = "{\"name\": \"Rotown\"}";
 
+    // act + assert
     mockMvc
         .perform(post("/api/v1/venues").contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isBadRequest());
@@ -101,10 +113,12 @@ public class VenueControllerTest {
 
   @Test
   void updateVenue_returns200() throws Exception {
+    // arrange
     VenueRequest request = new VenueRequest("New Name", 1);
     VenueResponse updated = new VenueResponse(1, "New Name", locationResponse);
     when(venueService.updateVenue(eq(1), any(VenueRequest.class))).thenReturn(updated);
 
+    // act + assert
     mockMvc
         .perform(
             put("/api/v1/venues/1")
@@ -116,6 +130,7 @@ public class VenueControllerTest {
 
   @Test
   void deleteVenue_returns204() throws Exception {
+    // act + assert
     mockMvc.perform(delete("/api/v1/venues/1")).andExpect(status().isNoContent());
   }
 }
