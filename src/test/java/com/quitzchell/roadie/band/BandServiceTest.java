@@ -43,8 +43,6 @@ public class BandServiceTest {
   void getBandById_whenExists_returnResponse() {
     // arrange
     Band band = new Band();
-    band.setId(1);
-    band.setName("Library Card");
     BandResponse response = new BandResponse(1, "Library Card");
 
     when(bandRepository.findById(1)).thenReturn(Optional.of(band));
@@ -74,7 +72,6 @@ public class BandServiceTest {
     BandRequest request = new BandRequest("Library Card");
     Band band = new Band();
     Band saved = new Band();
-    saved.setId(1);
     BandResponse response = new BandResponse(1, "Library Card");
 
     when(bandMapper.toEntity(request)).thenReturn(band);
@@ -93,11 +90,8 @@ public class BandServiceTest {
   void updateBand_saveAndReturnResponse() {
     // arrange
     Band existing = new Band();
-    existing.setId(1);
-    existing.setName("The Lumes");
     BandRequest request = new BandRequest("Library Card");
     Band saved = new Band();
-    saved.setId(1);
     BandResponse response = new BandResponse(1, "Library Card");
 
     when(bandRepository.findById(1)).thenReturn(Optional.of(existing));
