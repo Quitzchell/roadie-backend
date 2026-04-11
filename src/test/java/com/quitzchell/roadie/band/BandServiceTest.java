@@ -109,10 +109,10 @@ public class BandServiceTest {
 
   @Test
   void deleteBand_callsRepository() {
-    // arrange
+    // act
     bandService.deleteBand(1);
 
-    // act + assert
+    // assert
     verify(bandRepository).deleteById(1);
   }
 }

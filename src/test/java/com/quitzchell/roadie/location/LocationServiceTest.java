@@ -110,10 +110,10 @@ public class LocationServiceTest {
 
   @Test
   void deleteLocation_callsRepository() {
-    // arrange
+    // act
     locationService.deleteLocation(1);
 
-    // act + assert
+    // assert
     verify(locationRepository).deleteById(1);
   }
 }

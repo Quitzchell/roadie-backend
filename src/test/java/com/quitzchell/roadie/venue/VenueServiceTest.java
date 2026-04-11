@@ -120,11 +120,10 @@ public class VenueServiceTest {
     Venue existing = new Venue();
     VenueRequest request = new VenueRequest("Name", 99);
 
-    // act
     when(venueRepository.findById(1)).thenReturn(Optional.of(existing));
     when(locationRepository.findById(99)).thenReturn(Optional.empty());
 
-    // assert
+    // act + assert
     assertThatThrownBy(() -> venueService.updateVenue(1, request))
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("Location not found");
@@ -132,10 +131,10 @@ public class VenueServiceTest {
 
   @Test
   void deleteVenue_callsRepository() {
-    // arrange
+    // act
     venueService.deleteVenue(1);
 
-    // act + assert
+    // assert
     verify(venueRepository).deleteById(1);
   }
 }
