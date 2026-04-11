@@ -24,7 +24,6 @@ public class ProductionMapper {
   public ProductionResponse toResponse(Production production) {
     return new ProductionResponse(
         production.getId(),
-        production.getName(),
         production.getDate(),
         production.getStatus(),
         venueMapper.toResponse(production.getVenue()),
@@ -35,7 +34,6 @@ public class ProductionMapper {
 
   public Production toEntity(ProductionRequest request, Venue venue, Set<Contact> contacts) {
     Production production = new Production();
-    production.setName(request.name());
     production.setDate(request.date());
     production.setStatus(request.status());
     production.setVenue(venue);
@@ -45,7 +43,6 @@ public class ProductionMapper {
 
   public void updateEntity(
       Production production, ProductionRequest request, Venue venue, Set<Contact> contacts) {
-    production.setName(request.name());
     production.setDate(request.date());
     production.setStatus(request.status());
     production.setVenue(venue);

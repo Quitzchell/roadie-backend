@@ -3,7 +3,6 @@ package com.quitzchell.roadie.production;
 import com.quitzchell.roadie.contact.Contact;
 import com.quitzchell.roadie.venue.Venue;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
@@ -21,8 +20,6 @@ public class Production {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-
-  private String name;
 
   private LocalDate date;
 

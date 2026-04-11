@@ -8,7 +8,6 @@ import java.util.Set;
 
 public record ProductionResponse(
     Integer id,
-    String name,
     LocalDate date,
     ProductionStatus status,
     VenueResponse venue,
