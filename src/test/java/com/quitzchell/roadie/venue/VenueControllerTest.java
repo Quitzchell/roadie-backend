@@ -88,7 +88,7 @@ public class VenueControllerTest {
 
   @Test
   void createVenue_withBlankName_returns400() throws Exception {
-    // assert
+    // arrange
     VenueRequest request = new VenueRequest("", 1);
 
     // act + assert
