@@ -41,6 +41,7 @@ public class VenueControllerTest {
     mockMvc
         .perform(get("/api/v1/venues"))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].name").value("Rotown"))
         .andExpect(jsonPath("$[0].location.city").value("Rotterdam"));
   }
