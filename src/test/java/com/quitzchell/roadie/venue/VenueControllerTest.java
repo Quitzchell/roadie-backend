@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc(addFilters = false)
 public class VenueControllerTest {
   private final LocationResponse locationResponse =
-      new LocationResponse(1, "Rotterdam", "South Holland", "Netherlands");
+      new LocationResponse(1, "Rotterdam", "Zuid Holland", "Netherlands");
   private final VenueResponse venueResponse = new VenueResponse(1, "Rotown", locationResponse);
 
   @Autowired private MockMvc mockMvc;
@@ -43,7 +43,9 @@ public class VenueControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].name").value("Rotown"))
-        .andExpect(jsonPath("$[0].location.city").value("Rotterdam"));
+        .andExpect(jsonPath("$[0].location.city").value("Rotterdam"))
+        .andExpect(jsonPath("$[0].location.region").value("Zuid Holland"))
+        .andExpect(jsonPath("$[0].location.country").value("Netherlands"));
   }
 
   @Test
@@ -55,7 +57,11 @@ public class VenueControllerTest {
     mockMvc
         .perform(get("/api/v1/venues/1"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value("Rotown"));
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.name").value("Rotown"))
+        .andExpect(jsonPath("$.location.city").value("Rotterdam"))
+        .andExpect(jsonPath("$.location.region").value("Zuid Holland"))
+        .andExpect(jsonPath("$.location.country").value("Netherlands"));
   }
 
   @Test
@@ -84,7 +90,10 @@ public class VenueControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(1))
-        .andExpect(jsonPath("$.name").value("Rotown"));
+        .andExpect(jsonPath("$.name").value("Rotown"))
+        .andExpect(jsonPath("$.location.city").value("Rotterdam"))
+        .andExpect(jsonPath("$.location.region").value("Zuid Holland"))
+        .andExpect(jsonPath("$.location.country").value("Netherlands"));
   }
 
   @Test
@@ -115,8 +124,8 @@ public class VenueControllerTest {
   @Test
   void updateVenue_returns200() throws Exception {
     // arrange
-    VenueRequest request = new VenueRequest("New Name", 1);
-    VenueResponse updated = new VenueResponse(1, "New Name", locationResponse);
+    VenueRequest request = new VenueRequest("Rotown", 1);
+    VenueResponse updated = new VenueResponse(1, "Rotown", locationResponse);
     when(venueService.updateVenue(eq(1), any(VenueRequest.class))).thenReturn(updated);
 
     // act + assert
@@ -126,7 +135,11 @@ public class VenueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value("New Name"));
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.name").value("Rotown"))
+        .andExpect(jsonPath("$.location.city").value("Rotterdam"))
+        .andExpect(jsonPath("$.location.region").value("Zuid Holland"))
+        .andExpect(jsonPath("$.location.country").value("Netherlands"));
   }
 
   @Test
