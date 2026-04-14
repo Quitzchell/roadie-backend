@@ -30,7 +30,7 @@ public class BandControllerTest {
   @MockitoBean private BandService bandService;
 
   @Test
-  void getAllBands_return200() throws Exception {
+  void getAllBands_returns200() throws Exception {
     // arrange
     when(bandService.getAllBands()).thenReturn(List.of(bandResponse));
 
@@ -51,6 +51,7 @@ public class BandControllerTest {
     mockMvc
         .perform(get("/api/v1/bands/1"))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.name").value("Library Card"));
   }
 
@@ -67,7 +68,7 @@ public class BandControllerTest {
   }
 
   @Test
-  void createVenue_returns201() throws Exception {
+  void createBand_returns201() throws Exception {
     // arrange
     BandRequest request = new BandRequest("Library Card");
     when(bandService.createBand(any(BandRequest.class))).thenReturn(bandResponse);
@@ -97,11 +98,12 @@ public class BandControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.name").value("Library Card"));
   }
 
   @Test
-  void deleteVenue_returns204() throws Exception {
+  void deleteBand_returns204() throws Exception {
     // act + assert
     mockMvc.perform(delete("/api/v1/bands/1")).andExpect(status().isNoContent());
   }
