@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quitzchell.roadie.exception.ResourceNotFoundException;
 import com.quitzchell.roadie.location.dto.LocationRequest;
 import com.quitzchell.roadie.location.dto.LocationResponse;
 import java.util.List;
@@ -38,13 +39,14 @@ public class LocationControllerTest {
     mockMvc
         .perform(get("/api/v1/locations"))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].city").value("Rotterdam"))
         .andExpect(jsonPath("$[0].region").value("Zuid Holland"))
         .andExpect(jsonPath("$[0].country").value("Netherlands"));
   }
 
   @Test
-  void getVenueById_returns200() throws Exception {
+  void getLocationById_returns200() throws Exception {
     // arrange
     when(locationService.getLocationById(1)).thenReturn(locationResponse);
 
@@ -52,9 +54,23 @@ public class LocationControllerTest {
     mockMvc
         .perform(get("/api/v1/locations/1"))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.city").value("Rotterdam"))
         .andExpect(jsonPath("$.region").value("Zuid Holland"))
         .andExpect(jsonPath("$.country").value("Netherlands"));
+  }
+
+  @Test
+  void getLocationById_whenNotFound_returns404() throws Exception {
+    // arrange
+    when(locationService.getLocationById(99))
+        .thenThrow(new ResourceNotFoundException("Location not found"));
+
+    // act + assert
+    mockMvc
+        .perform(get("/api/v1/locations/99"))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.detail").value("Location not found"));
   }
 
   @Test
@@ -139,7 +155,7 @@ public class LocationControllerTest {
   }
 
   @Test
-  void deleteLocation_returns200() throws Exception {
+  void deleteLocation_returns204() throws Exception {
     // act + assert
     mockMvc.perform(delete("/api/v1/locations/1")).andExpect(status().isNoContent());
   }
