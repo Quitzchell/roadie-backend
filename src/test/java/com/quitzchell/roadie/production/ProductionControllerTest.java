@@ -110,6 +110,49 @@ public class ProductionControllerTest {
   }
 
   @Test
+  void createProduction_withNullDate_returns400() throws Exception {
+    // arrange
+    ProductionRequest request = new ProductionRequest(null, ProductionStatus.PENDING, 1, null);
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/productions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void createProduction_withNullStatus_returns400() throws Exception {
+    // arrange
+    ProductionRequest request = new ProductionRequest(LocalDate.of(2020, 1, 1), null, 1, null);
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/productions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void createProduction_withNullVenueId_returns400() throws Exception {
+    // arrange
+    ProductionRequest request =
+        new ProductionRequest(LocalDate.of(2020, 1, 1), ProductionStatus.PENDING, null, null);
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/productions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
   void updateProduction_returns200() throws Exception {
     // arrange
     ProductionRequest request =
