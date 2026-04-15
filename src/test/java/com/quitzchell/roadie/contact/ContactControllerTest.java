@@ -98,6 +98,50 @@ public class ContactControllerTest {
   }
 
   @Test
+  void createContact_withBlankName_returns400() throws Exception {
+    // arrange
+    ContactRequest request =
+        new ContactRequest("", "johndoe@example.com", Set.of(ContactRole.PRODUCTION_MANAGER));
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/contacts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void createContact_withBlankEmail_returns400() throws Exception {
+    // arrange
+    ContactRequest request =
+        new ContactRequest("John Doe", "", Set.of(ContactRole.PRODUCTION_MANAGER));
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/contacts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void createContact_withEmptyRoles_returns400() throws Exception {
+    // arrange
+    ContactRequest request = new ContactRequest("John Doe", "johndoe@example.com", Set.of());
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/contacts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
   void updateContact_returns200() throws Exception {
     // arrange
     ContactRequest request =
