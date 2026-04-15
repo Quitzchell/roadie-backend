@@ -85,6 +85,20 @@ public class BandControllerTest {
   }
 
   @Test
+  void createBand_withBlankName_returns400() throws Exception {
+    // arrange
+    BandRequest request = new BandRequest("");
+
+    // act + assert
+    mockMvc
+        .perform(
+            post("/api/v1/bands")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
   void updateBand_returns200() throws Exception {
     // arrange
     BandRequest request = new BandRequest("Library Card");
