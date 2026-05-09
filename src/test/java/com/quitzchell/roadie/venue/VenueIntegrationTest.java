@@ -5,16 +5,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.quitzchell.roadie.IntegrationTestBase;
 import com.quitzchell.roadie.location.Location;
 import com.quitzchell.roadie.location.LocationRepository;
 import com.quitzchell.roadie.venue.dto.VenueRequest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class VenueIntegrationTest extends IntegrationTestBase {
   @Autowired private MockMvc mockMvc;
 
@@ -29,7 +33,6 @@ public class VenueIntegrationTest extends IntegrationTestBase {
   @BeforeEach
   void setUp() {
     venueRepository.deleteAll();
-    locationRepository.deleteAll();
 
     Location location = new Location();
     location.setCity("Rotterdam");
@@ -38,16 +41,35 @@ public class VenueIntegrationTest extends IntegrationTestBase {
     savedLocation = locationRepository.save(location);
   }
 
+  @AfterAll
+  void tearDown() {
+    venueRepository.deleteAll();
+    locationRepository.deleteAll();
+  }
+
   @Test
   void createAndGetVenue() throws Exception {
     VenueRequest request = new VenueRequest("Rotown", savedLocation.getId());
 
+    String response =
+        mockMvc
+            .perform(
+                post("/api/v1/venues")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").isNumber())
+            .andExpect(jsonPath("$.name").value("Rotown"))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+    Integer id = JsonPath.read(response, "$.id");
+
     mockMvc
-        .perform(
-            post("/api/v1/venues")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isCreated())
+        .perform(get("/api/v1/venues/" + id))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(id))
         .andExpect(jsonPath("$.name").value("Rotown"));
   }
 
@@ -60,7 +82,7 @@ public class VenueIntegrationTest extends IntegrationTestBase {
   }
 
   @Test
-  void createVenue_withInvalidData_returns400() throws Exception {
+  void createVenue_withBlankName_returns400() throws Exception {
     String json = "{\"name\": \"\", \"locationId\": 1}";
 
     mockMvc
@@ -83,6 +105,7 @@ public class VenueIntegrationTest extends IntegrationTestBase {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").isNumber())
         .andExpect(jsonPath("$.name").value("New Name"));
   }
 
