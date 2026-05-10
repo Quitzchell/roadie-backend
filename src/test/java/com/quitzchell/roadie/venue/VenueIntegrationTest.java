@@ -27,12 +27,12 @@ public class VenueIntegrationTest extends IntegrationTestBase {
   @Autowired private VenueRepository venueRepository;
 
   @Autowired private LocationRepository locationRepository;
-
   private Location savedLocation;
 
   @BeforeEach
   void setUp() {
     venueRepository.deleteAll();
+    locationRepository.deleteAll();
 
     Location location = new Location();
     location.setCity("Rotterdam");
@@ -60,6 +60,9 @@ public class VenueIntegrationTest extends IntegrationTestBase {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").isNumber())
             .andExpect(jsonPath("$.name").value("Rotown"))
+            .andExpect(jsonPath("$.location.city").value("Rotterdam"))
+            .andExpect(jsonPath("$.location.region").value("South Holland"))
+            .andExpect(jsonPath("$.location.country").value("Netherlands"))
             .andReturn()
             .getResponse()
             .getContentAsString();
