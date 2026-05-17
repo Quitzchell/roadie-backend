@@ -90,7 +90,7 @@ public class BandIntegrationTest extends IntegrationTestBase {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").isNumber())
+        .andExpect(jsonPath("$.id").value(saved.getId()))
         .andExpect(jsonPath("$.name").value("Library Card"));
   }
 
